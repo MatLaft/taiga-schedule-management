@@ -1,0 +1,11 @@
+{
+  "api": "http://localhost:9000/api/v1/",
+  "eventsUrl": "ws://localhost:9000/events",
+  "debug": true,
+  "publicRegisterEnabled": true,
+  "feedbackEnabled": false,
+  "privacyPolicyUrl": null,
+  "termsOfServiceUrl": null,
+  "maxUploadFileSize": null,
+  "contribPlugins": []
+}
