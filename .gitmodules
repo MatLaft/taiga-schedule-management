@@ -1,0 +1,3 @@
+[submodule "taiga-front"]
+	path = taiga-front
+	url = git@github.com:MatLaft/taiga-front.git
