@@ -22,15 +22,38 @@ services:
     volumes: *local-back-volumes
 
   taiga-front:
-    build:
-      context: ..
-      dockerfile: taiga-docker/Dockerfile.front.local
-    image: taiga-front-local:latest
+    image: node:16-bullseye
+    working_dir: /taiga-front
+    environment:
+      CHOKIDAR_USEPOLLING: "true"
+      CHOKIDAR_INTERVAL: "1000"
+    command:
+      - /bin/bash
+      - -lc
+      - >
+        if [ ! -d node_modules ] || [ ! -f node_modules/.package-lock.json ] || ! cmp -s package-lock.json node_modules/.package-lock.json; then
+          npm ci --legacy-peer-deps &&
+          cp package-lock.json node_modules/.package-lock.json;
+        fi;
+        mkdir -p dist;
+        ln -sf /taiga-front/conf/conf.example.json /taiga-front/dist/conf.json;
+        npm start
     volumes:
-      - ./conf.json:/usr/share/nginx/html/conf.json
+      - ../taiga-front:/taiga-front
+      - taiga-front-node-modules:/taiga-front/node_modules
+      - ./conf.front.dev.json:/taiga-front/conf/conf.example.json:ro
 
   taiga-manage:
     build:
       context: ../taiga-back
       dockerfile: docker/Dockerfile
     volumes: *local-back-volumes
+
+  taiga-gateway:
+    volumes:
+      - ./taiga-gateway/taiga.local.conf:/etc/nginx/conf.d/default.conf
+      - taiga-static-data:/taiga/static
+      - taiga-media-data:/taiga/media
+
+volumes:
+  taiga-front-node-modules:

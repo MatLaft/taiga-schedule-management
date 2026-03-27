@@ -98,8 +98,8 @@ export ATTACHMENTS_MAX_AGE="${ATTACHMENTS_MAX_AGE:-360}"
 echo "[2/7] Parando e removendo containers atuais..."
 compose_base down --remove-orphans
 
-echo "[3/7] Gerando imagens locais (back/front/async/manage)..."
-compose_with_inits build taiga-back taiga-async taiga-front taiga-manage
+echo "[3/7] Gerando imagens locais (back/async/manage)..."
+compose_with_inits build taiga-back taiga-async taiga-manage
 
 echo "[4/7] Subindo servicos base do Taiga..."
 compose_base up -d \
