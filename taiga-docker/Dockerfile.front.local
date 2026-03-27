@@ -1,0 +1,23 @@
+FROM node:16-bullseye AS build
+
+WORKDIR /taiga-front
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends git python3 make g++ \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY taiga-front/package.json taiga-front/package-lock.json ./
+RUN npm ci --legacy-peer-deps
+
+COPY taiga-front/ ./
+RUN npx gulp deploy
+
+FROM nginx:1.23-alpine
+
+RUN apk add --no-cache bash
+
+COPY --from=build /taiga-front/dist/ /usr/share/nginx/html/
+COPY taiga-front/docker/default.conf /etc/nginx/conf.d/default.conf
+COPY taiga-front/docker/conf.json.template /usr/share/nginx/html/conf.json.template
+COPY taiga-front/docker/config_env_subst.sh /docker-entrypoint.d/30_config_env_subst.sh
+RUN chmod +x /docker-entrypoint.d/30_config_env_subst.sh

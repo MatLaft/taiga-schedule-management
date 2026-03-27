@@ -1,0 +1,36 @@
+version: "3.5"
+
+x-volumes:
+  &local-back-volumes
+  - ../taiga-back:/taiga-back
+  - taiga-static-data:/taiga-back/static
+  - taiga-media-data:/taiga-back/media
+
+services:
+  taiga-back:
+    build:
+      context: ../taiga-back
+      dockerfile: docker/Dockerfile
+    entrypoint: ["/bin/bash", "/taiga-back/docker/entrypoint.sh"]
+    volumes: *local-back-volumes
+
+  taiga-async:
+    build:
+      context: ../taiga-back
+      dockerfile: docker/Dockerfile
+    entrypoint: ["/bin/bash", "/taiga-back/docker/async_entrypoint.sh"]
+    volumes: *local-back-volumes
+
+  taiga-front:
+    build:
+      context: ..
+      dockerfile: taiga-docker/Dockerfile.front.local
+    image: taiga-front-local:latest
+    volumes:
+      - ./conf.json:/usr/share/nginx/html/conf.json
+
+  taiga-manage:
+    build:
+      context: ../taiga-back
+      dockerfile: docker/Dockerfile
+    volumes: *local-back-volumes
