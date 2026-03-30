@@ -32,7 +32,10 @@ x-volumes:
 
 services:
   taiga-manage:
-    image: taigaio/taiga-back:latest
+    image: taiga-back-alpine:local
+    build:
+      context: ../taiga-back
+      dockerfile: docker/Dockerfile
     environment: *default-back-environment
     depends_on:
       - taiga-db

@@ -55,6 +55,7 @@ services:
       - taiga
 
   taiga-back:
+    image: taiga-back-alpine:local
     build:
       context: ../taiga-back
       dockerfile: docker/Dockerfile
@@ -71,7 +72,10 @@ services:
         condition: service_started
 
   taiga-async:
-    image: taigaio/taiga-back:latest
+    image: taiga-back-alpine:local
+    build:
+      context: ../taiga-back
+      dockerfile: docker/Dockerfile
     entrypoint: ["/taiga-back/docker/async_entrypoint.sh"]
     environment: *default-back-environment
     volumes: *default-back-volumes
