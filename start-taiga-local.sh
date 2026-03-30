@@ -99,7 +99,7 @@ echo "[2/7] Parando e removendo containers atuais..."
 compose_base down --remove-orphans
 
 echo "[3/7] Gerando imagens locais (back/async)..."
-compose_base build --no-cache taiga-back taiga-async
+compose_base build taiga-back taiga-async
 
 echo "[4/7] Subindo servicos base do Taiga..."
 compose_base up -d \
