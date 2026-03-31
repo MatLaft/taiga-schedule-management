@@ -51,7 +51,18 @@ wait_for_running() {
 echo "[1/7] Inicializando submodulos..."
 require_cmd git
 git -C "${ROOT_DIR}" submodule sync --recursive
-git -C "${ROOT_DIR}" submodule update --init --recursive
+
+missing_submodules=()
+while IFS= read -r submodule_path; do
+  [ -n "${submodule_path}" ] && missing_submodules+=("${submodule_path}")
+done < <(git -C "${ROOT_DIR}" submodule status --recursive | awk '/^-/{print $2}')
+
+if [ "${#missing_submodules[@]}" -gt 0 ]; then
+  echo "[1/7] Inicializando submodulos ausentes: ${missing_submodules[*]}"
+  git -C "${ROOT_DIR}" submodule update --init --recursive -- "${missing_submodules[@]}"
+else
+  echo "[1/7] Submodulos ja inicializados; mantendo checkout/branch atual."
+fi
 
 if [ ! -f "${ROOT_DIR}/taiga-back/settings/config.py" ]; then
   echo "[1/7] Criando taiga-back/settings/config.py a partir de docker/config.py..."
