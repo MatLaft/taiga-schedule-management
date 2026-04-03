@@ -4,3 +4,6 @@
 [submodule "taiga-back"]
 	path = taiga-back
 	url = git@github.com:MatLaft/Taiga-back.git
+[submodule "taiga-front-next"]
+	path = taiga-front-next
+	url = git@github.com:MatLaft/Taiga-front-next.git
