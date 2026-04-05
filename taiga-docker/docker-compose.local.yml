@@ -12,6 +12,9 @@ services:
       context: ../taiga-back
       dockerfile: docker/Dockerfile
     entrypoint: ["/bin/bash", "/taiga-back/docker/entrypoint.sh"]
+    environment:
+      DEBUG: "True"
+    command: ["--log-level=debug"]
     volumes: *local-back-volumes
 
   taiga-async:
@@ -19,6 +22,9 @@ services:
       context: ../taiga-back
       dockerfile: docker/Dockerfile
     entrypoint: ["/bin/bash", "/taiga-back/docker/async_entrypoint.sh"]
+    environment:
+      DEBUG: "True"
+    command: ["-l", "DEBUG"]
     volumes: *local-back-volumes
 
   taiga-front:
