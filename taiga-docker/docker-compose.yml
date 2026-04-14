@@ -27,6 +27,8 @@ x-environment:
   RABBITMQ_PASS: "${RABBITMQ_PASS}"
   # Telemetry settings
   ENABLE_TELEMETRY: "${ENABLE_TELEMETRY}"
+  # Allow public user signup (backend side)
+  PUBLIC_REGISTER_ENABLED: "True"
   # ...your customizations go here
 
 x-volumes:
@@ -113,6 +115,9 @@ services:
       - taiga
     volumes:
       - ./conf.json:/usr/share/nginx/html/conf.json
+    ports:
+    - "35729:35729"
+
 
   taiga-events:
     image: taigaio/taiga-events:latest

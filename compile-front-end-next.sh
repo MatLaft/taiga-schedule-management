@@ -60,6 +60,13 @@ if [ ! -d "${NEXT_DIR}/node_modules" ]; then
   exit 1
 fi
 
+if [ ! -f "${NEXT_DIR}/node_modules/@angular/cli/package.json" ]; then
+  echo "Erro: @angular/cli nao encontrado em ${NEXT_DIR}/node_modules."
+  echo "As dependencias de desenvolvimento nao estao instaladas."
+  echo "Rode: cd ${NEXT_DIR} && npm ci --include=dev"
+  exit 1
+fi
+
 if [ ! -f "${NVMRC_PATH}" ]; then
   echo "Erro: arquivo nao encontrado: ${NVMRC_PATH}"
   exit 1
