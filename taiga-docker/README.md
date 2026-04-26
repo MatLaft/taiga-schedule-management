@@ -99,6 +99,8 @@ You will find basic **configuration variables** in the `.env` file. As stated be
 These vars are used to create the database for Taiga and connect to it.
 
 ```bash
+TAIGA_DB_HOST=taiga-db  # host used inside Docker network
+TAIGA_DB_PORT=5432  # host port used to expose PostgreSQL for local tools/tests
 POSTGRES_USER=taiga  # user to connect to PostgreSQL
 POSTGRES_PASSWORD=taiga  # database user's password
 ```
