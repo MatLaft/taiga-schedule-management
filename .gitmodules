@@ -1,9 +1,9 @@
 [submodule "taiga-front"]
 	path = taiga-front
-	url = git@github.com:MatLaft/taiga-front.git
+	url = git@github.com:MatLaft/taiga-front-schedule-management.git
 [submodule "taiga-back"]
 	path = taiga-back
-	url = git@github.com:MatLaft/Taiga-back.git
+	url = git@github.com:MatLaft/taiga-back-schedule-management.git
 [submodule "taiga-front-next"]
 	path = taiga-front-next
-	url = git@github.com:MatLaft/Taiga-front-next.git
+	url = git@github.com:MatLaft/taiga-front-next-schedule-management.git
