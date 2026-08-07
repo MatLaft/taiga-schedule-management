@@ -1,15 +1,13 @@
-version: "3.5"
-
 x-volumes:
   &local-back-volumes
-  - ../taiga-back:/taiga-back
+  - ../../components/taiga-back:/taiga-back
   - taiga-static-data:/taiga-back/static
   - taiga-media-data:/taiga-back/media
 
 services:
   taiga-back:
     build:
-      context: ../taiga-back
+      context: ../../components/taiga-back
       dockerfile: docker/Dockerfile
     entrypoint: ["/bin/bash", "/taiga-back/docker/entrypoint.sh"]
     environment:
@@ -19,7 +17,7 @@ services:
 
   taiga-async:
     build:
-      context: ../taiga-back
+      context: ../../components/taiga-back
       dockerfile: docker/Dockerfile
     entrypoint: ["/bin/bash", "/taiga-back/docker/async_entrypoint.sh"]
     environment:
@@ -45,13 +43,13 @@ services:
         ln -sf /taiga-front/conf/conf.example.json /taiga-front/dist/conf.json;
         npm start
     volumes:
-      - ../taiga-front:/taiga-front
+      - ../../components/taiga-front:/taiga-front
       - taiga-front-node-modules:/taiga-front/node_modules
       - ./conf.front.dev.json:/taiga-front/conf/conf.example.json:ro
 
   taiga-manage:
     build:
-      context: ../taiga-back
+      context: ../../components/taiga-back
       dockerfile: docker/Dockerfile
     volumes: *local-back-volumes
 

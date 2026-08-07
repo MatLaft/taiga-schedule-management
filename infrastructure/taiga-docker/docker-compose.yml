@@ -1,5 +1,3 @@
-version: "3.5"
-
 x-environment:
   &default-back-environment
   # These environment variables will be used by taiga-back and taiga-async.
@@ -61,7 +59,7 @@ services:
   taiga-back:
     image: taiga-back-alpine:local
     build:
-      context: ../taiga-back
+      context: ../../components/taiga-back
       dockerfile: docker/Dockerfile
     environment: *default-back-environment
     volumes: *default-back-volumes
@@ -78,7 +76,7 @@ services:
   taiga-async:
     image: taiga-back-alpine:local
     build:
-      context: ../taiga-back
+      context: ../../components/taiga-back
       dockerfile: docker/Dockerfile
     entrypoint: ["/taiga-back/docker/async_entrypoint.sh"]
     environment: *default-back-environment

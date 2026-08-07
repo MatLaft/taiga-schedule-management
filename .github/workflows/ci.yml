@@ -1,0 +1,27 @@
+name: Portfolio integration
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  structure:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout with components
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Validate shell scripts
+        run: shellcheck scripts/*.sh
+
+      - name: Validate Docker Compose
+        run: >-
+          docker compose
+          --env-file .env.example
+          -f infrastructure/taiga-docker/docker-compose.yml
+          -f infrastructure/taiga-docker/docker-compose.local.yml
+          config
+          --quiet

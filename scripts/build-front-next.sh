@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-NEXT_DIR="${ROOT_DIR}/taiga-front-next"
-FRONT_DIR="${ROOT_DIR}/taiga-front"
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+NEXT_DIR="${ROOT_DIR}/components/taiga-front-next"
+FRONT_DIR="${ROOT_DIR}/components/taiga-front"
 NEXT_ELEMENTS="${NEXT_DIR}/dist/elements/elements.js"
 FRONT_ELEMENTS="${FRONT_DIR}/elements.js"
 NVMRC_PATH="${NEXT_DIR}/.nvmrc"
 
 require_cmd() {
   if ! command -v "$1" >/dev/null 2>&1; then
-    echo "Erro: comando '$1' nao encontrado."
+    echo "Error: required command '$1' was not found."
     exit 1
   fi
 }
@@ -40,56 +40,56 @@ load_nvm() {
     return
   fi
 
-  echo "Erro: nvm nao encontrado. Instale nvm para usar a versao de Node do projeto."
+  echo "Error: nvm was not found. Install nvm to use the project's Node version."
   exit 1
 }
 
 if [ ! -d "${NEXT_DIR}" ]; then
-  echo "Erro: diretorio nao encontrado: ${NEXT_DIR}"
+  echo "Error: directory not found: ${NEXT_DIR}"
   exit 1
 fi
 
 if [ ! -d "${FRONT_DIR}" ]; then
-  echo "Erro: diretorio nao encontrado: ${FRONT_DIR}"
+  echo "Error: directory not found: ${FRONT_DIR}"
   exit 1
 fi
 
 if [ ! -d "${NEXT_DIR}/node_modules" ]; then
-  echo "Erro: dependencias ausentes em ${NEXT_DIR}/node_modules."
-  echo "Rode: cd ${NEXT_DIR} && npm install"
+  echo "Error: dependencies are missing from ${NEXT_DIR}/node_modules."
+  echo "Run: cd ${NEXT_DIR} && npm install"
   exit 1
 fi
 
 if [ ! -f "${NEXT_DIR}/node_modules/@angular/cli/package.json" ]; then
-  echo "Erro: @angular/cli nao encontrado em ${NEXT_DIR}/node_modules."
-  echo "As dependencias de desenvolvimento nao estao instaladas."
-  echo "Rode: cd ${NEXT_DIR} && npm ci --include=dev"
+  echo "Error: @angular/cli was not found in ${NEXT_DIR}/node_modules."
+  echo "The development dependencies are not installed."
+  echo "Run: cd ${NEXT_DIR} && npm ci --include=dev"
   exit 1
 fi
 
 if [ ! -f "${NVMRC_PATH}" ]; then
-  echo "Erro: arquivo nao encontrado: ${NVMRC_PATH}"
+  echo "Error: file not found: ${NVMRC_PATH}"
   exit 1
 fi
 
 REQUIRED_NODE_VERSION="$(tr -d '[:space:]' < "${NVMRC_PATH}")"
 if [ -z "${REQUIRED_NODE_VERSION}" ]; then
-  echo "Erro: ${NVMRC_PATH} esta vazio."
+  echo "Error: ${NVMRC_PATH} is empty."
   exit 1
 fi
 
-echo "[1/4] Selecionando Node ${REQUIRED_NODE_VERSION} via nvm..."
+echo "[1/4] Selecting Node ${REQUIRED_NODE_VERSION} through nvm..."
 load_nvm
 
 if ! nvm use "${REQUIRED_NODE_VERSION}" >/dev/null 2>&1; then
-  echo "Node ${REQUIRED_NODE_VERSION} nao encontrado localmente. Instalando com nvm..."
+  echo "Node ${REQUIRED_NODE_VERSION} is not installed locally. Installing it with nvm..."
   nvm install "${REQUIRED_NODE_VERSION}"
   nvm use "${REQUIRED_NODE_VERSION}" >/dev/null
 fi
 
 require_cmd npm
 
-echo "[2/4] Compilando webcomponent em taiga-front-next..."
+echo "[2/4] Building the taiga-front-next web component..."
 (
   cd "${NEXT_DIR}"
   npm run build:elements
@@ -97,13 +97,13 @@ echo "[2/4] Compilando webcomponent em taiga-front-next..."
 )
 
 if [ ! -f "${NEXT_ELEMENTS}" ]; then
-  echo "Erro: arquivo nao gerado: ${NEXT_ELEMENTS}"
+  echo "Error: expected output was not generated: ${NEXT_ELEMENTS}"
   exit 1
 fi
 
-echo "[3/4] Copiando elements.js para taiga-front..."
+echo "[3/4] Copying elements.js to taiga-front..."
 cp "${NEXT_ELEMENTS}" "${FRONT_ELEMENTS}"
 
-echo "[4/4] Concluido."
-echo "Node em uso: $(node -v)"
+echo "[4/4] Build complete."
+echo "Active Node version: $(node -v)"
 ls -lh "${NEXT_ELEMENTS}" "${FRONT_ELEMENTS}"
